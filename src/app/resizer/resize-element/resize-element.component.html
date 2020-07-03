@@ -1,0 +1,19 @@
+<div class='container'>
+  <div class='transformer'></div>
+  <div class='guides'>
+    <div class='handles'>
+      <div class='border'></div>
+      <div class='tl' (cdkDragMoved)='moved($event)' cdkDrag></div>
+      <div class='tc' (cdkDragMoved)='moved($event)' cdkDragLockAxis="y" cdkDrag></div>
+      <div class='tr' (cdkDragMoved)='moved($event)' cdkDrag></div>
+      <div class='cl' (cdkDragMoved)='moved($event)' cdkDragLockAxis="x" cdkDrag></div>
+      <div class='cr' (cdkDragMoved)='moved($event)' cdkDragLockAxis="x" cdkDrag></div>
+      <div class='bl' (cdkDragMoved)='moved($event)' cdkDrag></div>
+      <div class='bc' (cdkDragMoved)='moved($event)' cdkDragLockAxis="y" cdkDrag></div>
+      <div class='br' (cdkDragMoved)='moved($event)' cdkDrag></div>
+    </div>
+    <div class='outline'>
+      <img [src]='src'>
+    </div>
+  </div>
+</div>
