@@ -1,19 +1,23 @@
-<div class='container'>
-  <div class='transformer'></div>
-  <div class='guides'>
-    <div class='handles'>
+<div class='container' [cdkDragFreeDragPosition]="containerRect" (cdkDragEnded)='endedContainer($event)' cdkDrag #container>
+  <div class='transformer' *ngIf='transformGui'>
+    <div class='handles'
+      [style.transform]='getTranslateGrid()'
+      [style.width]='transformGui.width+"px"'
+      [style.height]='transformGui.height+"px"'
+    >
       <div class='border'></div>
-      <div class='tl' (cdkDragMoved)='moved($event)' cdkDrag></div>
-      <div class='tc' (cdkDragMoved)='moved($event)' cdkDragLockAxis="y" cdkDrag></div>
-      <div class='tr' (cdkDragMoved)='moved($event)' cdkDrag></div>
-      <div class='cl' (cdkDragMoved)='moved($event)' cdkDragLockAxis="x" cdkDrag></div>
-      <div class='cr' (cdkDragMoved)='moved($event)' cdkDragLockAxis="x" cdkDrag></div>
-      <div class='bl' (cdkDragMoved)='moved($event)' cdkDrag></div>
-      <div class='bc' (cdkDragMoved)='moved($event)' cdkDragLockAxis="y" cdkDrag></div>
-      <div class='br' (cdkDragMoved)='moved($event)' cdkDrag></div>
-    </div>
-    <div class='outline'>
-      <img [src]='src'>
+      <div class='dot tl'></div>
+      <div class='dot tr'></div>
+      <div class='dot bl'></div>
+      <div class='dot br'></div>
+      <div class='handle tl' (cdkDragStarted)='started($event)' (cdkDragMoved)='moved($event)' (cdkDragEnded)='ended($event)' cdkDrag></div>
+      <div class='handle tr' (cdkDragStarted)='started($event)' (cdkDragMoved)='moved($event)' (cdkDragEnded)='ended($event)' cdkDrag></div>
+      <div class='handle bl' (cdkDragStarted)='started($event)' (cdkDragMoved)='moved($event)' (cdkDragEnded)='ended($event)' cdkDrag></div>
+      <div class='handle br' (cdkDragStarted)='started($event)' (cdkDragMoved)='moved($event)' (cdkDragEnded)='ended($event)' cdkDrag></div>
     </div>
   </div>
+  <div class='outline'>
+      <img [src]='src' #img (load)='setGui()'>
+  </div>
+
 </div>
