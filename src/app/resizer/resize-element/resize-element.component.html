@@ -1,4 +1,8 @@
-<div class='container' [cdkDragFreeDragPosition]="containerRect" (cdkDragEnded)='endedContainer($event)' cdkDrag #container>
+<div class='container'
+  [cdkDragFreeDragPosition]="containerRect"
+  (cdkDragEnded)='endedContainer($event)'
+  (cdkDragMoved)='movedContainer($event)'
+  cdkDrag #container>
   <div class='transformer' *ngIf='transformGui'>
     <div class='handles'
       [style.transform]='getTranslateGrid()'
@@ -10,10 +14,10 @@
       <div class='dot tr'></div>
       <div class='dot bl'></div>
       <div class='dot br'></div>
-      <div class='handle tl' (cdkDragStarted)='started($event)' (cdkDragMoved)='moved($event)' (cdkDragEnded)='ended($event)' cdkDrag></div>
-      <div class='handle tr' (cdkDragStarted)='started($event)' (cdkDragMoved)='moved($event)' (cdkDragEnded)='ended($event)' cdkDrag></div>
-      <div class='handle bl' (cdkDragStarted)='started($event)' (cdkDragMoved)='moved($event)' (cdkDragEnded)='ended($event)' cdkDrag></div>
-      <div class='handle br' (cdkDragStarted)='started($event)' (cdkDragMoved)='moved($event)' (cdkDragEnded)='ended($event)' cdkDrag></div>
+      <div class='handle tl' (cdkDragStarted)='started($event)' (cdkDragMoved)='dragged($event)' (cdkDragEnded)='ended($event)' cdkDrag></div>
+      <div class='handle tr' (cdkDragStarted)='started($event)' (cdkDragMoved)='dragged($event)' (cdkDragEnded)='ended($event)' cdkDrag></div>
+      <div class='handle bl' (cdkDragStarted)='started($event)' (cdkDragMoved)='dragged($event)' (cdkDragEnded)='ended($event)' cdkDrag></div>
+      <div class='handle br' (cdkDragStarted)='started($event)' (cdkDragMoved)='dragged($event)' (cdkDragEnded)='ended($event)' cdkDrag></div>
     </div>
   </div>
   <div class='outline'>

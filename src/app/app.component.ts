@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AppService } from './app.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,12 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'design-tracer';
+
+  constructor( public app: AppService )
+  {
+  }
+
+  imageMoved(e): void {
+    this.app.imageRect.next(e);
+  }
 }

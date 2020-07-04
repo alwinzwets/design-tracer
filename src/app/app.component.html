@@ -1,3 +1,4 @@
 
 
-<app-resize-element src='https://source.unsplash.com/random/800x600'>
+<app-resize-element (moved)='imageMoved($event)' src='https://source.unsplash.com/random/800x600'></app-resize-element>
+<app-drawer [position]='app.imageRect'></app-drawer>

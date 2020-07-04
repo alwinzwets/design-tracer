@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 
-interface Position {
+export interface Rect {
   x?: number;
   y?: number;
   width?: number;
@@ -16,14 +16,17 @@ interface Position {
 export class ResizeElementComponent implements OnInit {
 
   @Input() src: string;
+
+  @Output() moved = new EventEmitter();
+
   @ViewChild('container') container: ElementRef;
   @ViewChild('img') img: ElementRef;
 
-  startingDimensions: Position;
-  startingPosition: Position;
-  transformGui: Position;
+  startingDimensions: Rect;
+  startingPosition: Rect;
+  transformGui: Rect;
   corner: string;
-  containerRect: Position = { x: 0, y: 0 };
+  containerRect: Rect = { x: 0, y: 0 };
 
 
   constructor() { }
@@ -42,7 +45,6 @@ export class ResizeElementComponent implements OnInit {
       height: rect.height,
     };
 
-    console.log(this.transformGui);
   }
 
   started(e): void {
@@ -72,7 +74,7 @@ export class ResizeElementComponent implements OnInit {
     console.log(e);
   }
 
-  moved(e): void {
+  dragged(e): void {
 
     // Calculate distance between starting point and current point.
     const diagonalLength =  Math.sqrt( Math.pow(this.startingPosition.width, 2) + Math.pow(this.startingPosition.height, 2));
@@ -119,10 +121,21 @@ export class ResizeElementComponent implements OnInit {
   }
 
   endedContainer(e?): void {
-    this.containerRect = this.container.nativeElement.getBoundingClientRect() as Position;
+    const rect: Rect = this.container.nativeElement.getBoundingClientRect() as Rect;
+    this.containerRect = {
+      x: Math.round( rect.x ),
+      y: Math.round( rect.y ),
+      width: Math.round( rect.width ),
+      height: Math.round( rect.height )
+    };
+    this.moved.emit(this.containerRect);
   }
 
-  private lockAspectRatio(p: Position): void {
+  movedContainer(e?): void {
+    this.moved.emit(this.container.nativeElement.getBoundingClientRect() as Rect);
+  }
+
+  private lockAspectRatio(p: Rect): void {
 
     this.img.nativeElement.width = p.width;
     this.img.nativeElement.height = p.width * this.startingPosition.height / this.startingPosition.width;
