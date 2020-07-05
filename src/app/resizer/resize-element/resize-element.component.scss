@@ -11,9 +11,11 @@
     position: absolute;
     top: 0; left: 0;
     z-index: 1000;
-    cursor: grab;
+    cursor: -webkit-grab;
 
-    &:active { cursor: grabbing; }
+    &:active {
+      cursor: -webkit-grabbing;
+    }
 
     .border {
       position: absolute;

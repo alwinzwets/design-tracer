@@ -34,9 +34,11 @@
     padding-top: 4px;
     color: rgba(0,0,0,0.3);
     text-align: center;
-    cursor: grab;
+    cursor: -webkit-grab;
 
-    &:active { cursor: grabbing; }
+    &:active {
+      cursor: -webkit-grabbing;
+    }
   }
 
 }
