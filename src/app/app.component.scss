@@ -1,3 +1,9 @@
+app-resize-element {
+  &[hidden] {
+    display: none;
+  }
+}
+
 app-drawer {
   transform: translate3d(0, -50px, 0);
   animation-direction: reverse;

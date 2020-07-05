@@ -12,6 +12,7 @@ export class AppComponent {
   title = 'design-tracer';
   opacity: number;
   image = 'https://source.unsplash.com/random/800x600';
+  show = true;
   showInterface = true;
 
   @ViewChild('resize') resize: ResizeElementComponent;
@@ -20,6 +21,10 @@ export class AppComponent {
   handleKeyboardEvent(e: KeyboardEvent): void {
     switch (e.key){
       case 'h':
+        this.toggleVisibility();
+        break;
+
+      case 'e':
         this.toggleInterface();
         break;
     }
@@ -48,5 +53,9 @@ export class AppComponent {
 
   toggleInterface(): void {
     this.showInterface = !this.showInterface;
+  }
+
+  toggleVisibility(): void {
+    this.show = !this.show;
   }
 }

@@ -1,13 +1,13 @@
 
 
-<app-resize-element #resize
+<app-resize-element #resize [hidden]='!show'
   (moved)='imageMoved($event)'
   [opacity]='opacity'
   [showInterface]='showInterface'
   [src]='image'>
 </app-resize-element>
 <app-drawer
-  [hidden]='!showInterface'
+  [hidden]='!showInterface || !show'
   [position]='app.imageRect'
   (opacity)='changeOpacity($event)'
   (image)='changeImage($event)'
