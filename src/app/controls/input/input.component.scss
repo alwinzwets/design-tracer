@@ -1,0 +1,38 @@
+@import "src/styles/gui";
+
+:host {
+
+  @include coloured-outline();
+
+  flex-grow: 0;
+
+  label {
+
+    @include gradient();
+
+    display: inline-block;
+    border-radius: 2em;
+    -webkit-clip-path: polygon(0 0, 75% 0, 75% 100%, 0% 100%);
+    clip-path: polygon(0 0, 70% 0, 70% 100%, 0% 100%);
+    margin: 2px;
+    font-family: "Roboto Condensed", sans-serif;
+    color: $text-colour;
+    font-weight: bold;
+    padding: 5px 1.5em 5px 10px;
+  }
+
+  input {
+    background: transparent;
+    border: 0;
+    font-family: "Roboto Condensed", sans-serif;
+    color: #fff;
+    outline: none;
+    font-weight: bold;
+    font-size: 1em;
+    display: inline-block;
+    width: 2em;
+    text-align: center;
+    margin: 0 1em 0 -0.5em;
+  }
+
+}

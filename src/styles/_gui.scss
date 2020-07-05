@@ -1,0 +1,15 @@
+@import "./colours";
+
+@mixin coloured-outline {
+  display: block;
+  border-radius: 2em;
+  border: 2px solid $outline-colour;
+  margin: calc(.5em + 1px);
+  flex-grow: 1;
+  position: relative;
+  box-shadow: inset 0 0 0 2px $inset-colour;
+}
+
+@mixin gradient( $angle: 345deg ) {
+  background: linear-gradient($angle, $gradient-a 0%, $gradient-b 100%);
+}

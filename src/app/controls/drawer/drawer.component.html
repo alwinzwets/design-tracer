@@ -1,22 +1,7 @@
 <section>
   <button>Browse</button>
   <button>100%</button>
-  <div class='input-group'>
-    <label>X</label>
-    <input type='text' [(ngModel)]='positionModel.x'>
-  </div>
-  <div class='input-group'>
-    <label>Y</label>
-    <input type='text' [(ngModel)]='positionModel.y'>
-  </div>
-  <div class='slider'>
-    <div class='fill' [style.clipPath]='getClipPath()'></div>
-    <div class='movement-area' #movementArea>
-      <div class='handle'
-        (cdkDragMoved)='movedHandle($event)'
-        cdkDragBoundary='.movement-area'
-        cdkDragLockAxis="x"
-        cdkDrag #handle>||</div>
-    </div>
-  </div>
+  <app-input label='X'></app-input>
+  <app-input label='Y'></app-input>
+  <app-slider></app-slider>
 </section>

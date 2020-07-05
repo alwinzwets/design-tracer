@@ -16,6 +16,7 @@ export interface Rect {
 export class ResizeElementComponent implements OnInit {
 
   @Input() src: string;
+  @Input() opacity: number;
 
   @Output() moved = new EventEmitter();
 

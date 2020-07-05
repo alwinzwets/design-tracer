@@ -1,0 +1,10 @@
+
+  <div class='fill' [style.clipPath]='getClipPath()'></div>
+  <div class='movement-area' #movementArea>
+    <div class='handle'
+      [cdkDragFreeDragPosition]="handlePosition"
+      (cdkDragMoved)='movedHandle($event)'
+      cdkDragBoundary='.movement-area'
+      cdkDragLockAxis="x"
+      cdkDrag #handle>||</div>
+  </div>

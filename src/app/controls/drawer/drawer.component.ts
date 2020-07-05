@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { Rect } from 'src/app/resizer/resize-element/resize-element.component';
 import { BehaviorSubject } from 'rxjs';
-
+import { ControlsService } from './../controls.service';
 @Component({
   selector: 'app-drawer',
   templateUrl: './drawer.component.html',
@@ -9,32 +9,22 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class DrawerComponent implements OnInit {
 
-  @Input() position: BehaviorSubject<Rect>;
+  @Input() set position(rect: BehaviorSubject<Rect>) {
+    rect.subscribe({
+      next: (p: Rect) => this.controlsService.imageRect = p
+    });
+  }
 
-  @ViewChild('movementArea') movementArea: ElementRef;
-  @ViewChild('handle') handle: ElementRef;
+  @Output() opacity = new EventEmitter();
 
-  positionModel: Rect;
-  opacity: number;
-
-  constructor() { }
+  constructor( private controlsService: ControlsService ) {
+    this.controlsService.opacity.subscribe({
+      next: (o: number) => this.opacity.emit(o)
+    });
+  }
 
   ngOnInit(): void {
-
-    this.position.subscribe({
-      next: (p: Rect) => this.positionModel = p
-    });
-
   }
 
-  movedHandle(e): void {
-    const handleRect = this.handle.nativeElement.getBoundingClientRect();
-    const movementAreaRect = this.movementArea.nativeElement.getBoundingClientRect();
-    this.opacity = (handleRect.x - movementAreaRect.x) / (movementAreaRect.width - handleRect.width);
-  }
-
-  getClipPath(): string {
-    return `polygon(0 0, ${this.opacity * 100}% 0, ${this.opacity * 100}% 100%, 0% 100%)`;
-  }
 
 }

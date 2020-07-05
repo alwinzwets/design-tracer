@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 })
 export class AppComponent {
   title = 'design-tracer';
+  opacity: number;
 
   constructor( public app: AppService )
   {
@@ -15,5 +16,10 @@ export class AppComponent {
 
   imageMoved(e): void {
     this.app.imageRect.next(e);
+  }
+
+  changeOpacity(e: number): void {
+    console.log(e);
+    this.opacity = e;
   }
 }
