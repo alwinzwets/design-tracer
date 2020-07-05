@@ -2,6 +2,7 @@
 
 :host {
 
+  pointer-events: all;
   @include coloured-outline();
 
   .fill {

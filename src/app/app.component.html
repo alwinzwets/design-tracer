@@ -1,12 +1,13 @@
 
 
-<app-resize-element
+<app-resize-element #resize
   (moved)='imageMoved($event)'
   [opacity]='opacity'
-  src='https://source.unsplash.com/random/800x600'>
+  [src]='image'>
 </app-resize-element>
 <app-drawer
   [position]='app.imageRect'
-  (opacity)='changeOpacity($event)'>
+  (opacity)='changeOpacity($event)'
+  (image)='changeImage($event)'
+  (fullsize)='setFullsize()'>
 </app-drawer>
-<div>{{ opacity }}</div>

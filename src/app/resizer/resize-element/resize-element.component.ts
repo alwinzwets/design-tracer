@@ -15,7 +15,22 @@ export interface Rect {
 })
 export class ResizeElementComponent implements OnInit {
 
-  @Input() src: string;
+
+  @Input() set src(s: string) {
+
+    this.source = s;
+
+    const sampler = new Image();
+    sampler.src = s;
+    sampler.onload = () => {
+      this.originalResolution = {
+        width: sampler.width,
+        height: sampler.height
+      };
+
+      this.calculateMaximumDimensions();
+    };
+  }
   @Input() opacity: number;
 
   @Output() moved = new EventEmitter();
@@ -23,6 +38,9 @@ export class ResizeElementComponent implements OnInit {
   @ViewChild('container') container: ElementRef;
   @ViewChild('img') img: ElementRef;
 
+  source: string;
+
+  originalResolution: Rect;
   startingDimensions: Rect;
   startingPosition: Rect;
   transformGui: Rect;
@@ -136,10 +154,33 @@ export class ResizeElementComponent implements OnInit {
     this.moved.emit(this.container.nativeElement.getBoundingClientRect() as Rect);
   }
 
-  private lockAspectRatio(p: Rect): void {
+  public setFullsize(): void {
+    this.img.nativeElement.width = this.originalResolution.width;
+    this.img.nativeElement.height = this.originalResolution.height;
+    this.setGui();
+  }
 
-    this.img.nativeElement.width = p.width;
-    this.img.nativeElement.height = p.width * this.startingPosition.height / this.startingPosition.width;
+  private calculateMaximumDimensions(): void {
+
+    const target: Rect = {
+      width: this.img.nativeElement.width,
+      height: this.img.nativeElement.height
+    };
+
+    const dominantWidth: Rect = {
+      width: target.width,
+      height: this.originalResolution.height * target.width / this.originalResolution.width
+    };
+
+    const dominantHeight: Rect = {
+      height: target.height,
+      width: this.originalResolution.width * target.height / this.originalResolution.height
+    };
+
+    const strategy: Rect = dominantWidth.height > target.height ? dominantHeight : dominantWidth;
+
+    this.img.nativeElement.width = strategy.width;
+    this.img.nativeElement.height = strategy.height;
 
   }
 

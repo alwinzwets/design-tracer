@@ -1,0 +1,5 @@
+@import "src/styles/gui";
+
+@include button;
+
+input[type=file] { display: none; }
