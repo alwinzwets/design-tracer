@@ -3,9 +3,11 @@
 <app-resize-element #resize
   (moved)='imageMoved($event)'
   [opacity]='opacity'
+  [showInterface]='showInterface'
   [src]='image'>
 </app-resize-element>
 <app-drawer
+  [hidden]='!showInterface'
   [position]='app.imageRect'
   (opacity)='changeOpacity($event)'
   (image)='changeImage($event)'

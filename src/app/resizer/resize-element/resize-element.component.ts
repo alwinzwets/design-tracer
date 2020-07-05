@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit, Output, EventEmitter, HostListener } from '@angular/core';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 
 export interface Rect {
@@ -15,7 +15,6 @@ export interface Rect {
 })
 export class ResizeElementComponent implements OnInit {
 
-
   @Input() set src(s: string) {
 
     this.source = s;
@@ -31,12 +30,17 @@ export class ResizeElementComponent implements OnInit {
       this.calculateMaximumDimensions();
     };
   }
+
+
+  constructor() { }
   @Input() opacity: number;
 
   @Output() moved = new EventEmitter();
 
   @ViewChild('container') container: ElementRef;
   @ViewChild('img') img: ElementRef;
+
+  @Input() showInterface = true;
 
   source: string;
 
@@ -48,7 +52,25 @@ export class ResizeElementComponent implements OnInit {
   containerRect: Rect = { x: 0, y: 0 };
 
 
-  constructor() { }
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(e: KeyboardEvent): void {
+
+    const amplifier = e.shiftKey ? 10 : 1;
+    switch (e.key){
+      case 'ArrowLeft':
+        this.move(-1 * amplifier, 0);
+        break;
+      case 'ArrowUp':
+        this.move(0, -1 * amplifier);
+        break;
+      case 'ArrowRight':
+        this.move(1 * amplifier, 0);
+        break;
+      case 'ArrowDown':
+        this.move(0, 1 * amplifier);
+        break;
+    }
+  }
 
   ngOnInit(): void {
   }
@@ -182,6 +204,13 @@ export class ResizeElementComponent implements OnInit {
     this.img.nativeElement.width = strategy.width;
     this.img.nativeElement.height = strategy.height;
 
+  }
+
+  private move(x: number, y: number): void {
+    this.containerRect = {
+      x: this.containerRect.x + x,
+      y: this.containerRect.y + y
+    };
   }
 
   getTranslateGrid(): string {

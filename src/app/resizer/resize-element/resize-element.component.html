@@ -3,7 +3,7 @@
   (cdkDragEnded)='endedContainer($event)'
   (cdkDragMoved)='movedContainer($event)'
   cdkDrag #container>
-  <div class='transformer' *ngIf='transformGui'>
+  <div class='transformer' *ngIf='transformGui && showInterface'>
     <div class='handles'
       [style.transform]='getTranslateGrid()'
       [style.width]='transformGui.width+"px"'

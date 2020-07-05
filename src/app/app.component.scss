@@ -1,0 +1,13 @@
+app-drawer {
+  transform: translate3d(0, -50px, 0);
+  animation-direction: reverse;
+
+  &[hidden] {
+    transform: translate3d(0, 100px, 0);
+    animation-direction: normal;
+    transition: all .5s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  }
+
+  transition: all .5s cubic-bezier( 0.735, 0.045, 0.6, 1.28);
+
+}
