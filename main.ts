@@ -25,7 +25,7 @@ function createWindow(): void {
 function setTray(): void {
   const tray = new Tray('./assets/icon.png');
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Show interface' },
+    { label: 'Show interface', click(): void { mainWindow.webContents.send('action', 'show-interface'); } },
     { label: 'Hide interface' },
     { label: 'Show overlay', click(): void { mainWindow.show(); } },
     { label: 'Hide overlay', click(): void { mainWindow.hide(); } },
