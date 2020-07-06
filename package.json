@@ -8,8 +8,10 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "copy-electron-assets": "copyfiles \"./assets/**/*\" \"./dist\"",
     "electron-tsc": "tsc main.ts --outDir dist",
-    "electron": "npm run electron-tsc && npm run build && electron ./dist/main.js"
+    "electron": "npm run electron-tsc && npm run build && electron ./dist/main.js",
+    "electron-only": "npm run copy-electron-assets && npm run electron-tsc && electron ./dist/main.js"
   },
   "private": true,
   "dependencies": {

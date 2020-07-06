@@ -1,9 +1,12 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Tray, Menu, globalShortcut } from 'electron';
 import * as path from 'path';
+
+let mainWindow: BrowserWindow;
+let ignoreMouseEvents = false;
 
 function createWindow(): void {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     transparent: true,
     frame: false,
     webPreferences: {
@@ -13,16 +16,44 @@ function createWindow(): void {
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, '/design-tracer/index.html'));
-
+  mainWindow.setSkipTaskbar(true);
+  mainWindow.setAlwaysOnTop(true);
   mainWindow.maximize();
 
+}
+
+function setTray(): void {
+  const tray = new Tray('./assets/icon.png');
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'Show interface' },
+    { label: 'Hide interface' },
+    { label: 'Show overlay', click(): void { mainWindow.show(); } },
+    { label: 'Hide overlay', click(): void { mainWindow.hide(); } },
+    { type: 'separator' },
+    { label: 'Exit DesignTracer', role: 'quit' },
+  ]);
+  tray.setToolTip('DesignTracer v1.0.0');
+  tray.setContextMenu(contextMenu);
+}
+
+function registerShortcuts(): void {
+  const toggleVisibility = globalShortcut.register('CmdOrCtrl+Alt+D', () => {
+    mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+  });
+  const toggleClickThrough = globalShortcut.register('CmdOrCtrl+Alt+E', () => {
+    ignoreMouseEvents = !ignoreMouseEvents;
+    mainWindow.setIgnoreMouseEvents(ignoreMouseEvents);
+  });
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
+
+  setTray();
   createWindow();
+  registerShortcuts();
 
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
