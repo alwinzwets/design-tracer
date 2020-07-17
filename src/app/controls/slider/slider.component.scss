@@ -4,6 +4,7 @@
 
   pointer-events: all;
   @include coloured-outline();
+  background: rgba(5, 5, 21, .7);
 
   .fill {
     @include gradient();

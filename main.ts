@@ -1,10 +1,22 @@
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, screen, Tray, Menu, globalShortcut } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import * as pkgInfo from './package.json';
 
 let win: BrowserWindow = null;
+let tray: Tray = null;
+let ignoreMouseEvents = false;
+let showWindow = true;
+
+enum AppAction {
+  ENABLE_EDIT,
+  DISABLE_EDIT,
+  HIDE_INTERFACE,
+  SHOW_INTERFACE
+}
+
 const args = process.argv.slice(1),
-  serve = args.some(val => val === '--serve');
+     serve = args.some(val => val === '--serve');
 
 function createWindow(): BrowserWindow {
 
@@ -15,8 +27,11 @@ function createWindow(): BrowserWindow {
   win = new BrowserWindow({
     x: 0,
     y: 0,
+    transparent: true,
+    frame: false,
     width: size.width,
     height: size.height,
+    icon: './assets/icon.ico',
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve) ? true : false,
@@ -40,6 +55,11 @@ function createWindow(): BrowserWindow {
     }));
   }
 
+  win.setSkipTaskbar(true);
+  win.setAlwaysOnTop(true);
+  win.setPosition(-1920, 0);
+  win.maximize();
+
   // Emitted when the window is closed.
   win.on('closed', () => {
     // Dereference the window object, usually you would store window
@@ -51,6 +71,46 @@ function createWindow(): BrowserWindow {
   return win;
 }
 
+
+function setTray(): void {
+  tray = new Tray('./assets/icon.ico');
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'Show controls', type: 'radio', checked: true, click(): void { setClickThrough(false); } },
+    { label: 'Hide controls', type: 'radio', click(): void { setClickThrough(true); } },
+    { type: 'separator' },
+    { label: 'Show overlay', type: 'radio', checked: true, click(): void { setVisibility(true); } },
+    { label: 'Hide overlay', type: 'radio', click(): void { setVisibility(false); } },
+    { type: 'separator' },
+    { label: 'Exit DesignTracer', click(): void { win.close(); app.exit(); } },
+  ]);
+  tray.setToolTip(`DesignTracer v${pkgInfo.version}`);
+  tray.setContextMenu(contextMenu);
+}
+
+
+function registerShortcuts(): void {
+  const toggleVisibility = globalShortcut.register('CmdOrCtrl+Alt+H', () => {
+  	setVisibility( !showWindow );
+  });
+  const toggleClickThrough = globalShortcut.register('CmdOrCtrl+Alt+E', () => {
+    setClickThrough( !ignoreMouseEvents );
+  });
+}
+
+function setVisibility(state: boolean): void {
+    showWindow = state;
+    win.webContents.send('action', showWindow ? AppAction.SHOW_INTERFACE : AppAction.HIDE_INTERFACE );
+    win.setIgnoreMouseEvents(!showWindow ? true : ignoreMouseEvents);
+}
+
+function setClickThrough(state: boolean): void {
+    ignoreMouseEvents = state;
+    win.setIgnoreMouseEvents(ignoreMouseEvents);
+    win.webContents.send('action', ignoreMouseEvents ? AppAction.DISABLE_EDIT : AppAction.ENABLE_EDIT );
+}
+
+
+
 try {
 
   app.allowRendererProcessReuse = true;
@@ -59,7 +119,13 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
-  app.on('ready', () => setTimeout(createWindow, 400));
+  app.on('ready', () => {
+    setTimeout(() => {
+      setTray();
+      createWindow();
+      registerShortcuts();
+    }, 400);
+  });
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {

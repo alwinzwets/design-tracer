@@ -1,23 +1,20 @@
 {
-  "name": "angular-electron",
-  "version": "8.0.0",
-  "description": "Angular 10 with Electron (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/angular-electron",
+  "name": "design-tracer",
+  "version": "0.1.0",
+  "description": "Overlay your work in any application with a click through overlay for pixel perfect productions.",
+  "homepage": "https://github.com/alwinzwets/design-tracer",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "Alwin Zwets",
+    "email": "hello@alwin.dev"
   },
   "keywords": [
-    "angular",
-    "angular 10",
-    "electron",
-    "typescript",
-    "eslint",
-    "spectron",
-    "sass"
+    "design",
+    "tracer",
+    "pixel",
+    "perfect",
+    "overlay"
   ],
   "main": "main.js",
-  "private": true,
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "ng": "ng",

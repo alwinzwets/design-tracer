@@ -1,7 +1,7 @@
 <div class='container'
   [cdkDragFreeDragPosition]="containerRect"
-  (cdkDragEnded)='endedContainer($event)'
-  (cdkDragMoved)='movedContainer($event)'
+  (cdkDragEnded)='endedContainer()'
+  (cdkDragMoved)='movedContainer()'
   cdkDrag #container>
   <div class='transformer' *ngIf='transformGui && showInterface'>
     <div class='handles'
