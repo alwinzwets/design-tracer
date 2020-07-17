@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Rect } from 'src/app/resizer/resize-element/resize-element.component';
+import { Rect } from 'app/resizer/resize-element/resize-element.component';
 import { ControlsService } from '../controls.service';
 
 @Component({

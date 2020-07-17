@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
-import { Rect } from 'src/app/resizer/resize-element/resize-element.component';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Rect } from 'app/resizer/resize-element/resize-element.component';
 import { BehaviorSubject } from 'rxjs';
 import { ControlsService } from './../controls.service';
 @Component({

@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit, Output, EventEmitter, HostListener } from '@angular/core';
-import { CdkDrag } from '@angular/cdk/drag-drop';
+import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter, HostListener } from '@angular/core';
+import { CdkDragMove, CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
 
 export interface Rect {
   x?: number;
@@ -88,7 +88,7 @@ export class ResizeElementComponent implements OnInit {
 
   }
 
-  started(e): void {
+  started(e: CdkDragStart): void {
     this.startingPosition = {
       x: this.img.nativeElement.offsetX,
       y: this.img.nativeElement.offsetY,
@@ -115,7 +115,7 @@ export class ResizeElementComponent implements OnInit {
     console.log(e);
   }
 
-  dragged(e): void {
+  dragged(e: CdkDragMove): void {
 
     // Calculate distance between starting point and current point.
     const diagonalLength =  Math.sqrt( Math.pow(this.startingPosition.width, 2) + Math.pow(this.startingPosition.height, 2));
@@ -123,7 +123,7 @@ export class ResizeElementComponent implements OnInit {
 
     const f = distance / diagonalLength;
 
-    let scale;
+    let scale: number;
 
     switch ( this.corner ) {
       case 'tl':
@@ -145,10 +145,9 @@ export class ResizeElementComponent implements OnInit {
 
   }
 
-  ended(e): void {
+  ended(e: CdkDragEnd): void {
     // Persist translated matrix sizes to image.
-    const rect = this.img.nativeElement.getBoundingClientRect();
-    console.log(rect);
+    const rect: Rect = this.img.nativeElement.getBoundingClientRect();
     this.img.nativeElement.width = Math.round(rect.width); // We don't want fractional pixels
     this.img.nativeElement.height = Math.round(rect.height); // We don't want fractional pixels
 
@@ -161,7 +160,7 @@ export class ResizeElementComponent implements OnInit {
     e.source.element.nativeElement.style.transform = null;
   }
 
-  endedContainer(e?): void {
+  endedContainer(): void {
     const rect: Rect = this.container.nativeElement.getBoundingClientRect() as Rect;
     this.containerRect = {
       x: Math.round( rect.x ),
@@ -172,7 +171,7 @@ export class ResizeElementComponent implements OnInit {
     this.moved.emit(this.containerRect);
   }
 
-  movedContainer(e?): void {
+  movedContainer(): void {
     this.moved.emit(this.container.nativeElement.getBoundingClientRect() as Rect);
   }
 
