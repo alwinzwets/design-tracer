@@ -3,7 +3,7 @@
   <div class='movement-area' #movementArea>
     <div class='handle'
       [cdkDragFreeDragPosition]="handlePosition"
-      (cdkDragMoved)='movedHandle($event)'
+      (cdkDragMoved)='movedHandle()'
       cdkDragBoundary='.movement-area'
       cdkDragLockAxis="x"
       cdkDrag #handle>||</div>

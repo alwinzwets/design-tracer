@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, HostListener } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { ControlsService } from '../controls.service';
 import { timer } from 'rxjs';
 
@@ -47,7 +47,7 @@ export class SliderComponent implements AfterViewInit {
     };
   }
 
-  movedHandle(e): void {
+  movedHandle(): void {
     const handleRect = this.handle.nativeElement.getBoundingClientRect();
     const movementAreaRect = this.movementArea.nativeElement.getBoundingClientRect();
     this.controls.opacity.next( (handleRect.x - movementAreaRect.x) / (movementAreaRect.width - handleRect.width) );

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Rect } from 'app/resizer/resize-element/resize-element.component';
 import { ControlsService } from '../controls.service';
+import { Rect } from 'app/interfaces/rect.interface';
 
 @Component({
   selector: 'app-input',

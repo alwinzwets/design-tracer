@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Rect } from './resizer/resize-element/resize-element.component';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { ipcRenderer } from 'electron';
+import { Rect } from './interfaces/rect.interface';
 
 export enum AppAction {
   ENABLE_EDIT,

@@ -1,12 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter, HostListener } from '@angular/core';
 import { CdkDragMove, CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
-
-export interface Rect {
-  x?: number;
-  y?: number;
-  width?: number;
-  height?: number;
-}
+import { Rect } from 'app/interfaces/rect.interface';
 
 @Component({
   selector: 'app-resize-element',
@@ -15,10 +9,16 @@ export interface Rect {
 })
 export class ResizeElementComponent implements OnInit {
 
+
+  // Inputs
   @Input() set src(s: string) {
+
+    if(!s) return;
 
     this.source = s;
 
+    // On changing source image, load the image in a
+    // shadow element to get the original dimensions.
     const sampler = new Image();
     sampler.src = s;
     sampler.onload = () => {
@@ -30,27 +30,22 @@ export class ResizeElementComponent implements OnInit {
       this.calculateMaximumDimensions();
     };
   }
-
-
-  constructor() { }
   @Input() opacity: number;
+  @Input() showInterface = true;
 
+  // Outputs
   @Output() moved = new EventEmitter();
 
   @ViewChild('container') container: ElementRef;
   @ViewChild('img') img: ElementRef;
 
-  @Input() showInterface = true;
-
   source: string;
-
   originalResolution: Rect;
   startingDimensions: Rect;
   startingPosition: Rect;
   transformGui: Rect;
   corner: string;
   containerRect: Rect = { x: 0, y: 0 };
-
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(e: KeyboardEvent): void {
@@ -71,6 +66,8 @@ export class ResizeElementComponent implements OnInit {
         break;
     }
   }
+
+  constructor() { }
 
   ngOnInit(): void {
   }
@@ -112,7 +109,6 @@ export class ResizeElementComponent implements OnInit {
       this.corner = 'br';
       this.img.nativeElement.style.transformOrigin = 'top left';
     }
-    console.log(e);
   }
 
   dragged(e: CdkDragMove): void {

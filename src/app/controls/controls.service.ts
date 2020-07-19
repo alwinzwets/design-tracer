@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Rect } from './interfaces/rect.interface';
-import { ControlsModule } from './controls.module';
+import { Rect } from 'app/interfaces/rect.interface';
 
 @Injectable({
   providedIn: 'root'

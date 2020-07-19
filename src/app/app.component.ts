@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { filter, delayWhen } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { AppService, AppAction } from './app.service';
-import { ResizeElementComponent, Rect } from './resizer/resize-element/resize-element.component';
-import { timer, of } from 'rxjs';
+import { ResizeElementComponent} from './resizer/resize-element/resize-element.component';
+import { Rect } from './interfaces/rect.interface';
 
 @Component({
   selector: 'app-root',
@@ -13,26 +13,11 @@ export class AppComponent implements OnInit {
 
   title = 'design-tracer';
   opacity: number;
-  image = 'https://source.unsplash.com/random/800x600';
+  image;
   show = true;
   showInterface = true;
 
   @ViewChild('resize') resize: ResizeElementComponent;
-
-  /*
-    @HostListener('document:keydown', ['$event'])
-    handleKeyboardEvent(e: KeyboardEvent): void {
-      switch (e.key){
-        case 'h':
-          this.toggleVisibility();
-          break;
-
-        case 'e':
-          this.toggleInterface();
-          break;
-      }
-    }
-  */
 
   constructor( public app: AppService )
   {

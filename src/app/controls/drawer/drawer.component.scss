@@ -19,5 +19,8 @@
 
     @include button;
 
+    app-file-input, button {
+      cursor: pointer;
+    }
   }
 }

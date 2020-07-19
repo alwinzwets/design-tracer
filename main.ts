@@ -3,11 +3,15 @@ import * as path from 'path';
 import * as url from 'url';
 import * as pkgInfo from './package.json';
 
+// Init global vars to prevent GC from cleaning to eagerly
 let win: BrowserWindow = null;
 let tray: Tray = null;
-let ignoreMouseEvents = false;
+
+// Flags
+let clickThroughEnabled = false;
 let showWindow = true;
 
+// Actions
 enum AppAction {
   ENABLE_EDIT,
   DISABLE_EDIT,
@@ -15,15 +19,19 @@ enum AppAction {
   SHOW_INTERFACE
 }
 
+// Determine dev or build
 const args = process.argv.slice(1),
      serve = args.some(val => val === '--serve');
+
+const iconPath = app.isPackaged ? path.join(process.resourcesPath, "build/icon.ico") : "build/icon.ico";
+
 
 function createWindow(): BrowserWindow {
 
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
 
-  // Create the browser window.
+  // Create the transparent, frameless window.
   win = new BrowserWindow({
     x: 0,
     y: 0,
@@ -31,7 +39,7 @@ function createWindow(): BrowserWindow {
     frame: false,
     width: size.width,
     height: size.height,
-    icon: './assets/icon.ico',
+    icon: iconPath,
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve) ? true : false,
@@ -55,9 +63,9 @@ function createWindow(): BrowserWindow {
     }));
   }
 
+  // Window behaviour
   win.setSkipTaskbar(true);
   win.setAlwaysOnTop(true);
-  win.setPosition(-1920, 0);
   win.maximize();
 
   // Emitted when the window is closed.
@@ -73,7 +81,9 @@ function createWindow(): BrowserWindow {
 
 
 function setTray(): void {
-  tray = new Tray('./assets/icon.ico');
+
+  // Init Tray icon and menu.
+  tray = new Tray(iconPath);
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Show controls', type: 'radio', checked: true, click(): void { setClickThrough(false); } },
     { label: 'Hide controls', type: 'radio', click(): void { setClickThrough(true); } },
@@ -89,24 +99,32 @@ function setTray(): void {
 
 
 function registerShortcuts(): void {
-  const toggleVisibility = globalShortcut.register('CmdOrCtrl+Alt+H', () => {
+
+  // Register global hot keys.
+  // TODO: These should be moved to a config file
+  globalShortcut.register('CmdOrCtrl+Alt+H', () => {
   	setVisibility( !showWindow );
   });
-  const toggleClickThrough = globalShortcut.register('CmdOrCtrl+Alt+E', () => {
-    setClickThrough( !ignoreMouseEvents );
+  globalShortcut.register('CmdOrCtrl+Alt+E', () => {
+    setClickThrough( !clickThroughEnabled );
   });
 }
 
 function setVisibility(state: boolean): void {
-    showWindow = state;
-    win.webContents.send('action', showWindow ? AppAction.SHOW_INTERFACE : AppAction.HIDE_INTERFACE );
-    win.setIgnoreMouseEvents(!showWindow ? true : ignoreMouseEvents);
+  // Set window visibily state
+  // Not hiding the windows as Windows is preventing code execution on hidden windows
+  // and Windows is animating window toggles which gets in the way of toggling the
+  // overlay quickly.
+  showWindow = state;
+  win.webContents.send('action', showWindow ? AppAction.SHOW_INTERFACE : AppAction.HIDE_INTERFACE );
+  win.setIgnoreMouseEvents(!showWindow ? true : clickThroughEnabled);
 }
 
 function setClickThrough(state: boolean): void {
-    ignoreMouseEvents = state;
-    win.setIgnoreMouseEvents(ignoreMouseEvents);
-    win.webContents.send('action', ignoreMouseEvents ? AppAction.DISABLE_EDIT : AppAction.ENABLE_EDIT );
+  // Set interaction state of
+  clickThroughEnabled = state;
+  win.setIgnoreMouseEvents(clickThroughEnabled);
+  win.webContents.send('action', clickThroughEnabled ? AppAction.DISABLE_EDIT : AppAction.ENABLE_EDIT );
 }
 
 
