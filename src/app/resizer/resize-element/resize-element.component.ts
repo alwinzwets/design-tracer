@@ -13,7 +13,7 @@ export class ResizeElementComponent implements OnInit {
   // Inputs
   @Input() set src(s: string) {
 
-    if(!s) return;
+    // if(!s) return;
 
     this.source = s;
 

@@ -2,4 +2,8 @@
 
 @include button;
 
+button {
+  cursor: pointer;
+}
+
 input[type=file] { display: none; }

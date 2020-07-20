@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { filter } from 'rxjs/operators';
 import { AppService, AppAction } from './app.service';
 import { ResizeElementComponent} from './resizer/resize-element/resize-element.component';
 import { Rect } from './interfaces/rect.interface';
+import { remote, ipcRenderer } from 'electron';
 
 @Component({
   selector: 'app-root',
@@ -17,10 +18,45 @@ export class AppComponent implements OnInit {
   show = true;
   showInterface = true;
 
+  window: Electron.BrowserWindow;
+
   @ViewChild('resize') resize: ResizeElementComponent;
+  metaKeyDown: boolean;
+
+  @HostListener('document:mousemove', ['$event'])
+  handleMouseMoveEvent(event: MouseEvent): void {
+    const elem = event.srcElement as Element;
+    if( elem.tagName === 'HTML' ) {
+      this.window.setIgnoreMouseEvents(true, { forward: true });
+    }
+    else
+    {
+      this.window.setIgnoreMouseEvents(false);
+    }
+  }
+
+  @HostListener('document:keyup', ['$event'])
+  handleKeyUpEvent(event: KeyboardEvent): void {
+    if( event.key === 'Meta' ) {
+      this.metaKeyDown = false;
+    }
+    if( this.metaKeyDown && event.key === 'ArrowLeft' ) {
+      ipcRenderer.sendSync('move-window', 'LEFT');
+    }
+    else if( this.metaKeyDown && event.key === 'ArrowRight' ) {
+      ipcRenderer.sendSync('move-window', 'RIGHT');
+    }
+  }
+  @HostListener('document:keydown', ['$event'])
+  handleKeyDownEvent(event: KeyboardEvent): void {
+    if( event.key === 'Meta' ) {
+      this.metaKeyDown = true;
+    }
+  }
 
   constructor( public app: AppService )
   {
+    this.window = remote.getCurrentWindow();
   }
 
   ngOnInit(): void {
@@ -37,7 +73,6 @@ export class AppComponent implements OnInit {
     this.app.appEvent$
       .pipe(
         filter( (action: AppAction) => [AppAction.SHOW_INTERFACE, AppAction.HIDE_INTERFACE].includes(action) ),
-        // delayWhen( (action: AppAction) => action === AppAction.HIDE_INTERFACE ? timer(1000) : of(action) )
       )
       .subscribe({
         next: (action: AppAction) => {

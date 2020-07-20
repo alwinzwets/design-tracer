@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen, Tray, Menu, globalShortcut } from 'electron';
+import { app, BrowserWindow, screen, Tray, Menu, globalShortcut, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import * as pkgInfo from './package.json';
@@ -40,6 +40,7 @@ function createWindow(): BrowserWindow {
     width: size.width,
     height: size.height,
     icon: iconPath,
+    resizable: false,
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve) ? true : false,
@@ -127,6 +128,17 @@ function setClickThrough(state: boolean): void {
   win.webContents.send('action', clickThroughEnabled ? AppAction.DISABLE_EDIT : AppAction.ENABLE_EDIT );
 }
 
+function moveWindow( x: number ): void {
+  const currentScreen = screen.getDisplayNearestPoint({x: win.getBounds().x, y: win.getBounds().y});
+  const screens = screen.getAllDisplays().sort((a, b) => (a.bounds.x > b.bounds.x) ? 1 : -1);
+  const screenIds = screens.map( screen => screen.id );
+  const currentIndex = screenIds.indexOf( currentScreen.id );
+
+  if( x < 0 && currentIndex === 0 || x > 0 && currentIndex === screens.length-1 ) return;
+
+  win.setPosition( screens[currentIndex+x].bounds.x, screens[currentIndex+x].bounds.y);
+  win.maximize();
+}
 
 
 try {
@@ -138,6 +150,12 @@ try {
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
   app.on('ready', () => {
+
+    ipcMain.on('move-window', (event, arg) => {
+        moveWindow(arg === 'LEFT' ? -1 : 1 );
+        event.returnValue = 'ok'
+    })
+
     setTimeout(() => {
       setTray();
       createWindow();
